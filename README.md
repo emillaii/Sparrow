@@ -1,4 +1,4 @@
-# Sapprow - Active Alignment Project
+# Sparrow - Active Alignment Project
 
 ![alt text](https://raw.githubusercontent.com/emillaii/Sapprow/master/sapprow.png)
 
