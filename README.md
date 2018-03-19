@@ -1,4 +1,4 @@
-# Sapprow
+# Sapprow - Active Alignment Project
 
 ![alt text](https://raw.githubusercontent.com/emillaii/Sapprow/master/sapprow.png)
 
