@@ -1,6 +1,6 @@
 # Sparrow - Active Alignment Project
 
-![alt text](https://raw.githubusercontent.com/emillaii/Sapprow/master/sapprow.png)
+![alt text](https://raw.githubusercontent.com/emillaii/Sparrow/master/Sparrow.png)
 
 > This project is used to develop a cutting edge camera module assemble machine based on latest software architecture. High performance are desirable for the Software Design,  Active Alignment Algorithm, Motion Control, Computer Vision and MIPI Grabbing system. 
 
@@ -12,8 +12,8 @@
 * [GNUPlot] - For graph plotting
 * [MTFMapper] - For MTF calculation 
 
-### Library Required For Building Sapprow 
-
+### Library Required For Building Sparrow 
+Library is put in the google drive, unzip the .libs.zip and put under <Project-Dir>/Sapprow/Sparrow_App
 All static library / .dll are built in **x64** 
 
 * [Dothinkey Library - DTCCM2_SDK] - Image Grabber From Mobile Camera Module 
