@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mirar_App", "Mirar_App\Mirar_App.vcxproj", "{E5909BFC-2D56-44A3-A005-6546F1FE1A93}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparrow", "Sparrow_App\Sparrow_App.vcxproj", "{E5909BFC-2D56-44A3-A005-6546F1FE1A93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

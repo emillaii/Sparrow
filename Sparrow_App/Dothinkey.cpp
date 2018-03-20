@@ -144,8 +144,8 @@ BOOL Dothinkey::DothinkeyLoadIniFile(int channel)
 	SensorTab *pCurrentSensor;
 	channel == 0 ? (pCurrentSensor = &this->current_sensor_a) : (pCurrentSensor = &this->current_sensor_b);
 	IniParser *iniParser = new IniParser();
-	//std::string str_filename = "C:\\Mirar\\IMX214_4L_3120_063_34.ini";
-	std::string str_filename = "C:\\Mirar\\IMX362_4L_3024_063_34.ini";
+	//std::string str_filename = "C:\\Sparrow\\IMX214_4L_3120_063_34.ini";
+	std::string str_filename = "C:\\Sparrow\\IMX362_4L_3024_063_34.ini";
 	iniParser->SetIniFilename(str_filename);
 
 	if (channel == 0)

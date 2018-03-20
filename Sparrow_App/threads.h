@@ -1,6 +1,6 @@
 #pragma once
 #include "Dothinkey.h"
-#include "Mirar_AppDlg.h"
+#include "Sparrow_AppDlg.h"
 
 void Camera_Thread(void *params, int iDevID);
 void Camera_ThreadA(void *params);

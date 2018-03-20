@@ -22,9 +22,9 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E5909BFC-2D56-44A3-A005-6546F1FE1A93}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
-    <RootNamespace>Sapprow</RootNamespace>
+    <RootNamespace>Sparrow</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Sapprow</ProjectName>
+    <ProjectName>Sparrow</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -209,8 +209,8 @@ copy /y "$(ProjectDir)libs\motion_x64\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MachineDefinition.h" />
-    <ClInclude Include="Mirar_App.h" />
-    <ClInclude Include="Mirar_AppDlg.h" />
+    <ClInclude Include="Sparrow_App.h" />
+    <ClInclude Include="Sparrow_AppDlg.h" />
     <ClInclude Include="MotionDlg.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="PositionLearningDlg.h" />
@@ -229,8 +229,8 @@ copy /y "$(ProjectDir)libs\motion_x64\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="IniParser.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MachineDefinition.cpp" />
-    <ClCompile Include="Mirar_App.cpp" />
-    <ClCompile Include="Mirar_AppDlg.cpp" />
+    <ClCompile Include="Sparrow_App.cpp" />
+    <ClCompile Include="Sparrow_AppDlg.cpp" />
     <ClCompile Include="MotionDlg.cpp" />
     <ClCompile Include="PositionLearningDlg.cpp" />
     <ClCompile Include="Sfr.cpp" />
@@ -244,14 +244,14 @@ copy /y "$(ProjectDir)libs\motion_x64\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MirarApp.rc" />
+    <ResourceCompile Include="SparrowApp.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\MirarApp.rc2" />
+    <None Include="res\SparrowApp.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\Mirar_App.ico" />
-    <Image Include="res\sapprow_0zF_icon.ico" />
+    <Image Include="res\Sparrow_App.ico" />
+    <Image Include="res\Sparrow_0zF_icon.ico" />
     <Image Include="res\Toolbar.bmp" />
     <Image Include="res\Toolbar256.bmp" />
   </ItemGroup>

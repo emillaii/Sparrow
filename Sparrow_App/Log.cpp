@@ -3,7 +3,7 @@
 
 Log* Log::GetInstance()
 {
-	static Log *pLog = new Log("Sapprow_Log\\Sapprow.log");
+	static Log *pLog = new Log("Sparrow_Log\\Sparrow.log");
 	return pLog;
 }
 

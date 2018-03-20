@@ -9,21 +9,21 @@ using namespace std::chrono;
 void NewAA_Thread(void *params)
 {
 	Log::GetInstance()->Write("[NewAA_Thread] Calculation Thread");
-	CMirarAppDlg *dlg = (CMirarAppDlg *)params;
+	CSparrowAppDlg *dlg = (CSparrowAppDlg *)params;
 	_endthread();
 }
 
 void SFR_Thread(void *params)
 {
 	Log::GetInstance()->Write("[SFR_Thread] SFR Calculation Thread");
-	CMirarAppDlg *dlg = (CMirarAppDlg *)params;
+	CSparrowAppDlg *dlg = (CSparrowAppDlg *)params;
 	_endthread();
 }
 
 void MTF_Live_Thread(void *params)
 {
 	Log::GetInstance()->Write("[MTF_Live_Thread] is called");
-	CMirarAppDlg *dlg = (CMirarAppDlg *)params;
+	CSparrowAppDlg *dlg = (CSparrowAppDlg *)params;
 	while (dlg->mtfLiveViewThread) {
 		Log::GetInstance()->Write("MTF Live is capturing....");
 		dlg->dk->DothinkeySaveImage(0);   //Save the image from Dothinkey

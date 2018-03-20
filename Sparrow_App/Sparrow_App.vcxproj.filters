@@ -18,10 +18,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Mirar_App.h">
+    <ClInclude Include="Sparrow_App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mirar_AppDlg.h">
+    <ClInclude Include="Sparrow_AppDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -77,10 +77,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mirar_App.cpp">
+    <ClCompile Include="Sparrow_App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mirar_AppDlg.cpp">
+    <ClCompile Include="Sparrow_AppDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
@@ -118,17 +118,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MirarApp.rc">
+    <ResourceCompile Include="SparrowApp.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\MirarApp.rc2">
+    <None Include="res\SparrowApp.rc2">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\Mirar_App.ico">
+    <Image Include="res\Sparrow_App.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\Toolbar.bmp">
@@ -137,7 +137,7 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\sapprow_0zF_icon.ico">
+    <Image Include="res\Sparrow_0zF_icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
