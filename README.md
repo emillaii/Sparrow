@@ -1,6 +1,6 @@
 # Sparrow - Active Alignment Project
 
-![alt text](https://raw.githubusercontent.com/emillaii/Sparrow/master/Sparrow.png)
+![alt text](https://raw.githubusercontent.com/emillaii/Sparrow/master/sparrow.png)
 
 > This project is used to develop a cutting edge camera module assemble machine based on latest software architecture. High performance are desirable for the Software Design,  Active Alignment Algorithm, Motion Control, Computer Vision and MIPI Grabbing system. 
 
