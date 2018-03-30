@@ -4,6 +4,7 @@
 #include "CXTMotionControler_Lib.h"
 #include "XT_MotionControler_Client_Lib.h"
 #include "XT_MotionControlerExtend_Client_Lib.h"
+#include "XT_Visual_Orientation_Lib.h"
 
 // MotionDlg dialog
 
@@ -125,12 +126,12 @@ public:
 		Thread_Buffer_Sync
 	}MOTION_THREAD;
 
-#define Axis_X_Range (500)
-#define Axis_Y_Range (500)
-#define Axis_Z_Range (160)
-#define Axis_A_Range (500)
-#define Axis_B_Range (500)
-#define Axis_C_Range (500)
+#define Axis_X_Range (30)
+#define Axis_Y_Range (30)
+#define Axis_Z_Range (68)
+#define Axis_A_Range (5)
+#define Axis_B_Range (4)
+#define Axis_C_Range (20)
 
 	afx_msg void OnBnClickedButtonInit();
 	afx_msg void OnBnClickedButtonZxyOrigin();
@@ -186,4 +187,12 @@ public:
 	bool move_AA_X();
 	bool move_AA_Y();
 	bool move_AA_Z(double stepSize, double targerPos);
+
+	double get_Z_Pos();
+	double get_X_Pos();
+	double get_Y_Pos();
+	double get_A_Pos();
+	double get_B_Pos();
+	double get_C_Pos();
+	afx_msg void OnBnClickedButtonZRunning();
 };

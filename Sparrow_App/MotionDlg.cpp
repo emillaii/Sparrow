@@ -135,7 +135,7 @@ BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
 			UpdateParam_Z();
 			XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, -m_fStep, 0);
 		}
-		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_Z)->m_hWnd)
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_A)->m_hWnd)
 		{
 			UpdateParam_A();
 			XT_Controler_Extend::JOG_GO(Thread_A, Axis_A, m_fStep, Axis_A_Range);
@@ -143,7 +143,7 @@ BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_A)->m_hWnd)
 		{
 			UpdateParam_A();
-			XT_Controler_Extend::JOG_GO(Thread_A, Axis_A, -m_fStep, 0);
+			XT_Controler_Extend::JOG_GO(Thread_A, Axis_A, -m_fStep, -Axis_A_Range);
 		}
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_B)->m_hWnd)
 		{
@@ -153,17 +153,17 @@ BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_B)->m_hWnd)
 		{
 			UpdateParam_B();
-			XT_Controler_Extend::JOG_GO(Thread_B, Axis_B, -m_fStep, 0);
+			XT_Controler_Extend::JOG_GO(Thread_B, Axis_B, -m_fStep, -Axis_B_Range);
 		}
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_C)->m_hWnd)
 		{
 			UpdateParam_C();
-			XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, m_fStep, Axis_C_Range);
+			XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, m_fStep, Axis_C_Range-10);
 		}
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_C)->m_hWnd)
 		{
 			UpdateParam_C();
-			XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, -m_fStep, 0);
+			XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, -m_fStep, -Axis_C_Range-10);
 		}
 	}
 	else if (WM_LBUTTONUP == pMsg->message)
@@ -756,6 +756,7 @@ BEGIN_MESSAGE_MAP(MotionDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_A_Origin, &MotionDlg::OnBnClickedButtonAOrigin)
 	ON_BN_CLICKED(IDC_BUTTON_B_Origin, &MotionDlg::OnBnClickedButtonBOrigin)
 	ON_BN_CLICKED(IDC_BUTTON_C_Origin, &MotionDlg::OnBnClickedButtonCOrigin)
+	ON_BN_CLICKED(IDC_BUTTON_Z_Running, &MotionDlg::OnBnClickedButtonZRunning)
 END_MESSAGE_MAP()
 
 
@@ -769,33 +770,40 @@ void MotionDlg::OnBnClickedButtonInit()
 	int res = 0;
 
 	KillTimer(0);
-	m_cMaxVel_X.SetWindowText(_T("1"));
-	m_cMaxVel_Y.SetWindowText(_T("1"));
-	m_cMaxVel_Z.SetWindowText(_T("10"));
-	m_cMaxVel_A.SetWindowText(_T("1"));
-	m_cMaxVel_B.SetWindowText(_T("10"));
-	m_cMaxVel_C.SetWindowText(_T("10"));
+	/*m_cMaxVel_X.SetWindowText(_T("4"));
+	m_cMaxVel_Y.SetWindowText(_T("20"));
+	m_cMaxVel_Z.SetWindowText(_T("20"));
+	m_cMaxVel_A.SetWindowText(_T("23"));
+	m_cMaxVel_B.SetWindowText(_T("17"));
+	m_cMaxVel_C.SetWindowText(_T("80"));*/
 
-	m_cMaxAcc_X.SetWindowText(_T("1000"));
-	m_cMaxAcc_Y.SetWindowText(_T("1000"));
-	m_cMaxAcc_Z.SetWindowText(_T("1000"));
-	m_cMaxAcc_A.SetWindowText(_T("1000"));
-	m_cMaxAcc_B.SetWindowText(_T("1000"));
-	m_cMaxAcc_C.SetWindowText(_T("1000"));
+	m_cMaxVel_X.SetWindowText(_T("4"));
+	m_cMaxVel_Y.SetWindowText(_T("4"));
+	m_cMaxVel_Z.SetWindowText(_T("4"));
+	m_cMaxVel_A.SetWindowText(_T("4"));
+	m_cMaxVel_B.SetWindowText(_T("4"));
+	m_cMaxVel_C.SetWindowText(_T("4"));
 
-	m_cMaxJerk_X.SetWindowText(_T("10000"));
-	m_cMaxJerk_Y.SetWindowText(_T("10000"));
-	m_cMaxJerk_Z.SetWindowText(_T("1000"));
-	m_cMaxJerk_A.SetWindowText(_T("10000"));
-	m_cMaxJerk_B.SetWindowText(_T("10000"));
-	m_cMaxJerk_C.SetWindowText(_T("10000"));
+	m_cMaxAcc_X.SetWindowText(_T("40"));
+	m_cMaxAcc_Y.SetWindowText(_T("200"));
+	m_cMaxAcc_Z.SetWindowText(_T("200"));
+	m_cMaxAcc_A.SetWindowText(_T("230"));
+	m_cMaxAcc_B.SetWindowText(_T("170"));
+	m_cMaxAcc_C.SetWindowText(_T("800"));
 
-	m_cPulseRatio_X.SetWindowText(_T("-1577.49441304062"));
-	m_cPulseRatio_Y.SetWindowText(_T("-1288.24476650563"));
-	m_cPulseRatio_Z.SetWindowText(_T("166.666666666666666666667"));
-	m_cPulseRatio_A.SetWindowText(_T("-1636.43801991"));
-	m_cPulseRatio_B.SetWindowText(_T("166.666666666666666666667"));
-	m_cPulseRatio_C.SetWindowText(_T("-166.666666666666666666667"));
+	m_cMaxJerk_X.SetWindowText(_T("400"));
+	m_cMaxJerk_Y.SetWindowText(_T("2000"));
+	m_cMaxJerk_Z.SetWindowText(_T("2000"));
+	m_cMaxJerk_A.SetWindowText(_T("2300"));
+	m_cMaxJerk_B.SetWindowText(_T("1700"));
+	m_cMaxJerk_C.SetWindowText(_T("8000"));
+
+	m_cPulseRatio_X.SetWindowText(_T("1000"));
+	m_cPulseRatio_Y.SetWindowText(_T("1000"));
+	m_cPulseRatio_Z.SetWindowText(_T("500"));
+	m_cPulseRatio_A.SetWindowText(_T("1333.333333333333333333"));
+	m_cPulseRatio_B.SetWindowText(_T("1818.181818181818181818"));
+	m_cPulseRatio_C.SetWindowText(_T("-500"));
 
 	m_cStep.SetWindowText(_T("0.1"));
 
@@ -832,23 +840,23 @@ void MotionDlg::OnBnClickedButtonInit()
 
 	int iThread_Init = 0;
 
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 0, Axis_X);
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 1, Axis_Y);
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 2, Axis_A);
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 3, Axis_Z);
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 0, Axis_B);
-	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 2, Axis_C);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 1, Axis_X);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 2, Axis_Y);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 4, Axis_A);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 0, Axis_Z);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 5, Axis_B);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 3, Axis_C);
 
-	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 14, 1, Origin_X);
-	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 12, 0, Origin_Y);
-	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 13, 0, Origin_A);
-	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 4, 3, 1, Origin_Z);
-	//XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 4, 1, 1, Origin_B);
-	//XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 4, 2, 1, Origin_C);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 12, 0, Origin_X);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 11, 0, Origin_Y);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 6, 0, Origin_A);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 15, 0, Origin_Z);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 2, 0, Origin_B);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 8, 0, Origin_C);
 
 
 #if 1
-	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 0, Output_0);
+	//XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 0, Output_0);
 
 #else
 	XT_Controler_Extend::DigitOut_PreciousTrig_Init(1, 4, 0, 100, 101, 102, 0, Output_0);
@@ -856,20 +864,20 @@ void MotionDlg::OnBnClickedButtonInit()
 
 
 #if 1
-
+/*
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 15, EN_X);
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 16, EN_Y);
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 17, EN_Z);
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 13, En_A);
-	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 14, En_B);
+	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 14, En_B);*/
 	//XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 2, En_C);
 
-	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_X, 1);
-	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_Y, 1);
-	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_Z, 1);
-	XT_Controler::SET_OUTPUT_IO(iThread_Init, En_A, 0);
-	XT_Controler::SET_OUTPUT_IO(iThread_Init, En_B, 0);
-	//XT_Controler::SET_OUTPUT_IO(iThread_Init, En_C, 1);
+	//XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_X, 1);
+	//XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_Y, 1);
+	//XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_Z, 1);
+	//XT_Controler::SET_OUTPUT_IO(iThread_Init, En_A, 0);
+	//XT_Controler::SET_OUTPUT_IO(iThread_Init, En_B, 0);
+	////XT_Controler::SET_OUTPUT_IO(iThread_Init, En_C, 1);
 #endif
 
 	//Temporary Comment For Connecting Simulator
@@ -931,10 +939,10 @@ void MotionDlg::OnBnClickedButtonZxyOrigin()
 #else
 
 	XT_Controler::TILL_THREAD_INS_FINISH(Thread_X, Thread_Z);
-	Axis_SeekOrigin_PN(Thread_X, Axis_X, Origin_X, 0, Axis_X_Range + 10, -Axis_X_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_X, Axis_X, Origin_X, 0, Axis_X_Range, -Axis_X_Range, 0, 0, 0.1);
 
 	XT_Controler::TILL_THREAD_INS_FINISH(Thread_Y, Thread_Z);
-	Axis_SeekOrigin_PN(Thread_Y, Axis_Y, Origin_Y, 0, Axis_Y_Range + 10, -Axis_Y_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_Y, Axis_Y, Origin_Y, 0, Axis_Y_Range, -Axis_Y_Range, 0, 0, 0.1);
 #endif
 }
 
@@ -944,7 +952,7 @@ void MotionDlg::OnBnClickedButtonXOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_X();
 
-	Axis_SeekOrigin_PN(Thread_X, Axis_X, Origin_X, 0, Axis_X_Range + 10, -Axis_X_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_X, Axis_X, Origin_X, 0, Axis_X_Range, -Axis_X_Range, 0, 0, 0.1);
 }
 
 
@@ -953,7 +961,7 @@ void MotionDlg::OnBnClickedButtonYOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_Y();
 
-	Axis_SeekOrigin_PN(Thread_Y, Axis_Y, Origin_Y, 0, Axis_Y_Range + 10, -Axis_Y_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_Y, Axis_Y, Origin_Y, 0, Axis_Y_Range, -Axis_Y_Range, 0, 0, 0.1);
 
 }
 
@@ -963,7 +971,7 @@ void MotionDlg::OnBnClickedButtonZOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_Z();
 
-	Axis_SeekOrigin_PN(Thread_Z, Axis_Z, Origin_Z, 0, Axis_Z_Range + 10, -Axis_Z_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_Z, Axis_Z, Origin_Z, 1, Axis_Z_Range, -Axis_Z_Range, 0, 0, 0.1);
 }
 
 void MotionDlg::OnBnClickedButtonAOrigin()
@@ -971,7 +979,7 @@ void MotionDlg::OnBnClickedButtonAOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_A();
 
-	Axis_SeekOrigin_PN(Thread_A, Axis_A, Origin_A, 0, Axis_A_Range + 10, -Axis_A_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_A, Axis_A, Origin_A, 1, Axis_A_Range, -Axis_A_Range*2, 0, -5.21, 0.1);
 
 }
 
@@ -981,7 +989,7 @@ void MotionDlg::OnBnClickedButtonBOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_B();
 
-	Axis_SeekOrigin_PN(Thread_B, Axis_B, Origin_B, 0, Axis_B_Range + 10, -Axis_B_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_B, Axis_B, Origin_B, 1, Axis_B_Range, -Axis_B_Range*2, 0, -3.89, 0.1);
 
 }
 
@@ -991,7 +999,7 @@ void MotionDlg::OnBnClickedButtonCOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_C();
 
-	Axis_SeekOrigin_PN(Thread_C, Axis_C, Origin_C, 0, Axis_C_Range + 10, -Axis_C_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_C, Axis_C, Origin_C, 1, Axis_C_Range, -Axis_C_Range*2, 0, 0, 0.1);
 
 }
 
@@ -1139,8 +1147,6 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_X, fVal);
 		assert(1 == res);
 		Text.Format(_T("%.3f"), fVal);
-		//n = n + 1;
-		//Text.Format(_T("%.3f"), n);
 		m_cCurPos_X.SetWindowText(Text);
 
 		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Y, fVal);
@@ -1325,4 +1331,95 @@ bool MotionDlg::move_AA_Z(double stepSize, double targetPos)
 	logString.Format(_T("[move_AA_Z] current pos: %f "), currPos);
 	Log::GetInstance()->WriteString(logString);
 	return true;
+}
+
+double MotionDlg::get_Z_Pos()
+{
+	int res;
+	double mPos;
+	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+double MotionDlg::get_X_Pos()
+{
+
+	int res;
+	double mPos;
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_X, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+double MotionDlg::get_Y_Pos()
+{
+	int res;
+	double mPos;
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Y, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+double MotionDlg::get_A_Pos()
+{
+
+	int res;
+	double mPos;
+	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_A, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+double MotionDlg::get_B_Pos()
+{
+
+	int res;
+	double mPos;
+	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_B, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+double MotionDlg::get_C_Pos()
+{
+
+	int res;
+	double mPos;
+	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_C, mPos);
+	assert(1 == res);
+	return mPos;
+}
+
+void MotionDlg::OnBnClickedButtonZRunning()
+{
+	// TODO: Add your control notification handler code here
+	double mPos = 0;
+	double mStep = 10;
+	CString mText;
+	int res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, mPos);
+	assert(1 == res);
+
+	while (mPos < Axis_Z_Range - 10)
+	{
+		XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, mStep, Axis_Z_Range);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, mPos);
+		assert(1 == res);
+
+		mText.Format(_T("%.3f"), mPos);
+		m_cCurPos_Z.SetWindowText(mText);
+	}
+	XT_Controler_Extend::JOG_STOP(Thread_Z, Axis_Z);
+
+	while (mPos > -Axis_Z_Range + 10)
+	{
+		XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, -mStep, -Axis_Z_Range);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, mPos);
+		assert(1 == res);
+		mText.Format(_T("%.3f"), mPos);
+		m_cCurPos_Z.SetWindowText(mText);
+	}
+	XT_Controler_Extend::JOG_STOP(Thread_Z, Axis_Z);
 }

@@ -2,6 +2,7 @@
 #include "PositionLearningDlg.h"
 #include "Utils.h"
 #include "Log.h"
+#include "MotionDlg.h"
 // CPositionLearningDlg dialog
 
 #define CONFIG_FILE "positionLearning.dat"
@@ -47,6 +48,7 @@ void CPositionLearningDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPositionLearningDlg, CDialog)
 	ON_WM_SYSCOMMAND()
+	ON_WM_TIMER()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CPositionLearningDlg::OnBnClickedLearnSUTX)
@@ -111,8 +113,17 @@ BOOL CPositionLearningDlg::OnInitDialog()
 	this->m_aa_zscan_y_edit_text.SetWindowTextW(temp);
 	temp.Format(_T("%.3f"), this->machine->getAAHeadPos().aaZScanZ);
 	this->m_aa_zscan_z_edit_text.SetWindowTextW(temp);
-
+	SetTimer(0, 500, 0);
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CPositionLearningDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	Log::GetInstance()->WriteString(_T("[OnTimer] Refreshing Screen"));
+	CString mText;
+	double zPos = MotionDlg::GetInstance()->get_Z_Pos();
+	mText.Format(_T("Z Pos: %f", zPos));
+	Log::GetInstance()->WriteString(mText);
 }
 
 void CPositionLearningDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -254,6 +265,19 @@ void CPositionLearningDlg::OnBnClickedLearnSUTX()
 
 void CPositionLearningDlg::OnBnClickedSaveConfiguration()
 {
+	double xPos;
+	double yPos;
+	double zPos;
+	double aPos;
+	double bPos;
+	double cPos;
+	xPos = MotionDlg::GetInstance()->get_X_Pos();
+	yPos = MotionDlg::GetInstance()->get_Y_Pos();
+	zPos = MotionDlg::GetInstance()->get_Z_Pos();
+	aPos = MotionDlg::GetInstance()->get_A_Pos();
+	bPos = MotionDlg::GetInstance()->get_B_Pos();
+	cPos = MotionDlg::GetInstance()->get_C_Pos();
+
 	updateSUTPosition(); 
 	updateAAPosition(); 
 

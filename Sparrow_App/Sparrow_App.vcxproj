@@ -122,12 +122,12 @@ copy /y "$(ProjectDir)libs\motion\bin\*.dll" "$(OutDir)"</Command>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_CHARTS_LIB;_LARGEFILE_SOURCE;_FILE_OFFSET_BITS=64;QT_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)libs\opencv\include;$(ProjectDir)libs\eigen\eigen-eigen-5a0156e40feb;$(ProjectDir)libs\motion_x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs;$(ProjectDir)libs\opencv\include;$(ProjectDir)libs\eigen\eigen-eigen-5a0156e40feb;$(ProjectDir)libs\motion_x64;$(ProjectDir)libs\XTVision\x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)libs\DTCCM2_SDK\x64_Lib;$(ProjectDir)libs\opencv\x64\vc14\lib;$(ProjectDir)libs\motion_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)libs\DTCCM2_SDK\x64_Lib;$(ProjectDir)libs\opencv\x64\vc14\lib;$(ProjectDir)libs\motion_x64;$(ProjectDir)libs\XTVision\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>dtccm2.lib;opencv_world310d.lib;MotionControlDll.lib;MotionControlExtendDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>

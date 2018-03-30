@@ -55,6 +55,7 @@ public:
 	void updateSUTPosition();
 	void updateAAPosition();
 public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedLearnSUTX();
 	afx_msg void OnBnClickedSaveConfiguration();
 	afx_msg void OnBnClickedSUTXMoveF();
@@ -63,7 +64,7 @@ public:
 	afx_msg void OnBnClickedSUTYMoveB();
 	afx_msg void OnBnClickedSUTZMoveF();
 	afx_msg void OnBnClickedSUTZMoveB();
-
+	
 private: 
 	bool incrementMotorInStep(CStatic &m, double step, bool direction);
 };
