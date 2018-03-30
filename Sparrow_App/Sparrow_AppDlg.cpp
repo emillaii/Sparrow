@@ -1,5 +1,4 @@
-﻿
-// Sparrow_AppDlg.cpp : implementation file
+﻿//Sparrow_AppDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
