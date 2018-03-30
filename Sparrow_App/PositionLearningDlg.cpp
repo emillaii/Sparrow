@@ -1,12 +1,20 @@
 #include "stdafx.h"
 #include "PositionLearningDlg.h"
 #include "Utils.h"
+#include "Log.h"
 // CPositionLearningDlg dialog
 
 #define CONFIG_FILE "positionLearning.dat"
 
 using namespace std;
 using json = nlohmann::json;
+
+CPositionLearningDlg* CPositionLearningDlg::GetInstance()
+{
+	static CPositionLearningDlg *pDlg = new CPositionLearningDlg();
+	return pDlg;
+}
+
 
 CPositionLearningDlg::CPositionLearningDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(IDD_POSITION_LEARNING_DIALOG, pParent)
@@ -21,6 +29,11 @@ void CPositionLearningDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SUT_PICK_X, m_sut_pick_x_edit_text);
 	DDX_Control(pDX, IDC_SUT_PICK_Y, m_sut_pick_y_edit_text);
 	DDX_Control(pDX, IDC_SUT_PICK_Z, m_sut_pick_z_edit_text);
+
+	//AA Head Related
+	DDX_Control(pDX, IDC_AA_SCAN_X, m_aa_zscan_x_edit_text);
+	DDX_Control(pDX, IDC_AA_SCAN_Y, m_aa_zscan_y_edit_text);
+	DDX_Control(pDX, IDC_AA_SCAN_Z, m_aa_zscan_z_edit_text);
 
 	DDX_Control(pDX, IDC_POS_DLG_SUT_X_POS, m_sut_x_curr_pos_text);
 	DDX_Control(pDX, IDC_POS_DLG_SUT_Y_POS, m_sut_y_curr_pos_text);
@@ -82,37 +95,8 @@ BOOL CPositionLearningDlg::OnInitDialog()
 		AfxMessageBox(_T("Error ! Missing in machine definition!"));
 		return TRUE;
 	}
-	//Read the config file from Config file
-	//Then parse the json into object
-	//ToDo: Move to a function, this part will be getting bigger later...
-	ifstream fin(CONFIG_FILE);
-	string line;
-	if (fin.is_open())
-	{
-		if (getline(fin, line)) {
-			nlohmann::json o = nlohmann::json::parse(line.c_str());
-			for (json::iterator it = o.begin(); it != o.end(); ++it) {
-				if (strcmp(SUT_POSITION_PICK_X, it.key().c_str()) == 0) {
-					double value = (double)it.value();
-					this->machine->setSensorUTPickXPos(value);
-				}
-				else if (strcmp(SUT_POSITION_PICK_Y, it.key().c_str()) == 0) {
-					double value = (double)it.value();
-					this->machine->setSensorUTPickYPos(value);
-				}
-				else if (strcmp(SUT_POSITION_PICK_Z, it.key().c_str()) == 0) {
-					double value = (double)it.value();
-					this->machine->setSensorUTPickZPos(value);
-				}
-				DBOUT(it.key().c_str());
-			}
-		}
-		fin.close();
-	}
-	else {
-		AfxMessageBox(_T("Warning! Missing the config file"));
-	}
 
+	loadConfigFile();
 	//Update the UI here
 	CString temp;
 	temp.Format(_T("%.3f"), this->machine->getSensorUTPos().sutPickX);
@@ -121,6 +105,12 @@ BOOL CPositionLearningDlg::OnInitDialog()
 	this->m_sut_pick_y_edit_text.SetWindowTextW(temp);
 	temp.Format(_T("%.3f"), this->machine->getSensorUTPos().sutPickZ);
 	this->m_sut_pick_z_edit_text.SetWindowTextW(temp);
+	temp.Format(_T("%.3f"), this->machine->getAAHeadPos().aaZScanX);
+	this->m_aa_zscan_x_edit_text.SetWindowTextW(temp);
+	temp.Format(_T("%.3f"), this->machine->getAAHeadPos().aaZScanY);
+	this->m_aa_zscan_y_edit_text.SetWindowTextW(temp);
+	temp.Format(_T("%.3f"), this->machine->getAAHeadPos().aaZScanZ);
+	this->m_aa_zscan_z_edit_text.SetWindowTextW(temp);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -171,31 +161,82 @@ void CPositionLearningDlg::setMachineDefinition(MachineDefinition* machineDefini
 	this->machine = machineDefinition;
 }
 
-int CPositionLearningDlg::getSUTX()
+void CPositionLearningDlg::loadConfigFile()
 {
-	return x;
+	//Read the config file from Config file
+	ifstream fin(CONFIG_FILE);
+	string line;
+	if (fin.is_open())
+	{
+		Log::GetInstance()->WriteString(_T("[loadConfigFile] Load Config File Started"));
+		if (getline(fin, line)) {
+			nlohmann::json o = nlohmann::json::parse(line.c_str());
+			for (json::iterator it = o.begin(); it != o.end(); ++it) {
+				double value = (double)it.value();
+				if (strcmp(SUT_POSITION_PICK_X, it.key().c_str()) == 0) {
+					this->machine->setSensorUTPickXPos(value);
+				}
+				else if (strcmp(SUT_POSITION_PICK_Y, it.key().c_str()) == 0) {
+					this->machine->setSensorUTPickYPos(value);
+				}
+				else if (strcmp(SUT_POSITION_PICK_Z, it.key().c_str()) == 0) {
+					this->machine->setSensorUTPickZPos(value);
+				}
+				else if (strcmp(AA_POSITION_ZSCAN_X, it.key().c_str()) == 0) {
+					this->machine->setAAZscanPosX(value);
+				}
+				else if (strcmp(AA_POSITION_ZSCAN_Y, it.key().c_str()) == 0) {
+					this->machine->setAAZscanPosY(value);
+				}
+				else if (strcmp(AA_POSITION_ZSCAN_Z, it.key().c_str()) == 0) {
+					this->machine->setAAZscanPosZ(value);
+				}
+				DBOUT(it.key().c_str());
+			}
+		}
+		fin.close();
+	}
+	else {
+		Log::GetInstance()->WriteString(_T("[loadConfigFile] Missing the config file!"));
+		AfxMessageBox(_T("Warning! Missing the config file"));
+	}
+	Log::GetInstance()->WriteString(_T("[loadConfigFile] Load Config File Finished"));
 }
 
 void CPositionLearningDlg::updateSUTPosition()
 {
 	CString temp;
-	SensorUT sut;
 	m_sut_pick_x_edit_text.GetWindowTextW(temp);
 	double value = _wtof(temp);
-	sut.sutPickX = value;
+	this->machine->setSensorUTPickXPos(value);
+
 	m_sut_pick_y_edit_text.GetWindowTextW(temp);
 	value = _wtof(temp);
-	sut.sutPickY = value;
+	this->machine->setSensorUTPickYPos(value);
+
 	m_sut_pick_z_edit_text.GetWindowTextW(temp);
 	value = _wtof(temp);
-	sut.sutPickZ = value;
-	machine->setSensorUTPos(sut);
+	this->machine->setSensorUTPickZPos(value);
+}
+
+void CPositionLearningDlg::updateAAPosition()
+{
+	CString temp;
+	m_aa_zscan_x_edit_text.GetWindowTextW(temp);
+	double value = _wtof(temp);
+	this->machine->setAAZscanPosX(value);
+
+	m_aa_zscan_y_edit_text.GetWindowTextW(temp);
+	value = _wtof(temp);
+	this->machine->setAAZscanPosY(value);
+	
+	m_aa_zscan_z_edit_text.GetWindowTextW(temp);
+    value = _wtof(temp);
+	this->machine->setAAZscanPosZ(value);
 }
 
 void CPositionLearningDlg::OnBnClickedLearnSUTX()
 {
-	// TODO: Add your control notification handler code here
-	x++;
 	CString temp;
 	SensorUT sut;
 	m_sut_pick_x_edit_text.GetWindowTextW(temp);
@@ -214,10 +255,15 @@ void CPositionLearningDlg::OnBnClickedLearnSUTX()
 void CPositionLearningDlg::OnBnClickedSaveConfiguration()
 {
 	updateSUTPosition(); 
-	json j; 
+	updateAAPosition(); 
+
+	json j;
 	j.emplace(SUT_POSITION_PICK_X, this->machine->getSensorUTPos().sutPickX);
 	j.emplace(SUT_POSITION_PICK_Y, this->machine->getSensorUTPos().sutPickY);
 	j.emplace(SUT_POSITION_PICK_Z, this->machine->getSensorUTPos().sutPickZ);
+	j.emplace(AA_POSITION_ZSCAN_X, this->machine->getAAHeadPos().aaZScanX);
+	j.emplace(AA_POSITION_ZSCAN_Y, this->machine->getAAHeadPos().aaZScanY);
+	j.emplace(AA_POSITION_ZSCAN_Z, this->machine->getAAHeadPos().aaZScanZ);
 	ofstream fout;
 	fout.open(CONFIG_FILE, std::ios::out);
 	CString dumpString(j.dump().c_str());

@@ -184,4 +184,6 @@ private:
 public:
 	bool isMotionDriverInit(); 
 	bool move_AA_X();
+	bool move_AA_Y();
+	bool move_AA_Z(double stepSize, double targerPos);
 };

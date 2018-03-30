@@ -17,6 +17,9 @@ bool MachineDefinition::init()
 	this->sut.sutPickX = 1; 
 	this->sut.sutPickY = 2; 
 	this->sut.sutPickZ = 3; 
+	this->aahead.aaZScanX = 4;
+	this->aahead.aaZScanY = 5;
+	this->aahead.aaZScanZ = 6;
 	this->aahead.aaZScanStartZ = 11; 
 	this->aahead.initTiltX = 12; 
 	this->aahead.initTiltY = 13;
@@ -49,8 +52,30 @@ void MachineDefinition::setSensorUTPickZPos(double v)
 	this->sut.sutPickZ = v;
 }
 
+//AA Head
+
 
 AAHead MachineDefinition::getAAHeadPos()
 {
 	return this->aahead;
+}
+
+void MachineDefinition::setAAHeadPos(AAHead aahead)
+{
+	this->aahead = aahead;
+}
+
+void MachineDefinition::setAAZscanPosX(double v)
+{
+	aahead.aaZScanX = v;
+}
+
+void MachineDefinition::setAAZscanPosY(double v)
+{
+	aahead.aaZScanY = v;
+}
+
+void MachineDefinition::setAAZscanPosZ(double v)
+{
+	aahead.aaZScanZ = v;
 }

@@ -535,18 +535,31 @@ BOOL Dothinkey::DothinkeySaveImage(int channel)
 {
 	if (channel == 0)
 	{
-		if (m_CameraAWorkStatus != CAMERA_START) return false;
+		if (m_CameraAWorkStatus != CAMERA_START)
+		{
+			Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 0 is not ready. Save Image Fail!"));
+			return false;
+		}
 		m_GrabImageWorkStatusA = GRAB_START;
 		while (m_GrabImageWorkStatusA != GRAB_STOP) {
 			Sleep(100);
-			DBOUT("Waiting for grabbing image \n");
+			Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 0. Waiting for grabbing image"));
 		}
-		DBOUT("Grabbing image finished \n");
+		Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 0. Grabbing Image Finished"));
 	}
 	else if (channel == 1)
 	{
-		if (m_CameraBWorkStatus != CAMERA_START) return false;
-		m_GrabImageWorkStatusB = GRAB_STOP;
+		if (m_CameraBWorkStatus != CAMERA_START)
+		{
+			Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 1 is not ready. Save Image Fail!"));
+			return false;
+		}
+		m_GrabImageWorkStatusB = GRAB_START;
+		while (m_GrabImageWorkStatusB != GRAB_STOP) {
+			Sleep(100);
+			Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 1. Waiting for grabbing image"));
+		}
+		Log::GetInstance()->WriteString(_T("[DothinkeySaveImage] Camera Channel 1. Grabbing Image Finished"));
 	}
 	return true;
 }

@@ -18,6 +18,9 @@ public:
 	void setSensorUTPickYPos(double v);
 	void setSensorUTPickZPos(double v);
 
+	void setAAZscanPosX(double v);
+	void setAAZscanPosY(double v);
+	void setAAZscanPosZ(double v);
 	SensorUT getSensorUTPos();
 	void setAAHeadPos(AAHead aahead);
 	AAHead getAAHeadPos();

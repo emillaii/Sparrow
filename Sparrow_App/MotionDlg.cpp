@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "MotionDlg.h"
 #include "afxdialogex.h"
-
+#include "Log.h"
 
 // MotionDlg dialog
 
@@ -1310,4 +1310,19 @@ bool MotionDlg::isMotionDriverInit()
 bool MotionDlg::move_AA_X()
 {
 	return true; 
+}
+
+bool MotionDlg::move_AA_Z(double stepSize, double targetPos)
+{
+	CString logString;
+	logString.Format(_T("[move_AA_Z] stepSize: %f , targetPos: %f"), stepSize, targetPos);
+	Log::GetInstance()->WriteString(logString);
+	double currPos = 0; 
+	int res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, currPos);
+	//assert(1 == res);
+	XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, stepSize, targetPos);
+	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, currPos);
+	logString.Format(_T("[move_AA_Z] current pos: %f "), currPos);
+	Log::GetInstance()->WriteString(logString);
+	return true;
 }

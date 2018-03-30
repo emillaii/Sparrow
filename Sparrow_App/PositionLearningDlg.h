@@ -9,6 +9,7 @@ class CPositionLearningDlg : public CDialog
 {
 	// Construction
 public:
+	static CPositionLearningDlg* GetInstance();
 	CPositionLearningDlg(CWnd* pParent = NULL);	// standard constructor
 
 												// Dialog Data
@@ -30,7 +31,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private: 
-	int x = 0; 
 	MachineDefinition *machine; 
 	//UI
 	//SUT Related
@@ -44,10 +44,16 @@ private:
 	CStatic m_sut_y_step_size;
 	CStatic m_sut_z_step_size;
 
+	//AA Head Related
+	CStatic m_aa_zscan_x_edit_text;
+	CStatic m_aa_zscan_y_edit_text;
+	CStatic m_aa_zscan_z_edit_text;
+
 public: 
 	void setMachineDefinition(MachineDefinition* machine);
-	int getSUTX(); 
+	void loadConfigFile(); 
 	void updateSUTPosition();
+	void updateAAPosition();
 public:
 	afx_msg void OnBnClickedLearnSUTX();
 	afx_msg void OnBnClickedSaveConfiguration();
