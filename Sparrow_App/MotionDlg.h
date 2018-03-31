@@ -233,6 +233,8 @@ public:
 //Motion Service 
 private: 
 	bool isInit = false;
+	void updateUIInterface();
+	void releaseXTMotionDriver();
 public:
 	bool isMotionDriverInit(); 
 	bool move_AA_X();
