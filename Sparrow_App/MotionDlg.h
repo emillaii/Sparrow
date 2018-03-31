@@ -4,7 +4,7 @@
 #include "CXTMotionControler_Lib.h"
 #include "XT_MotionControler_Client_Lib.h"
 #include "XT_MotionControlerExtend_Client_Lib.h"
-//#include "XT_Visual_Orientation_Lib.h"
+#include "XT_Visual_Orientation_Lib.h"
 
 // MotionDlg dialog
 
@@ -39,6 +39,9 @@ public:
 	void UpdateParam_A();
 	void UpdateParam_B();
 	void UpdateParam_C();
+	void UpdateParam_M();
+	void UpdateParam_N();
+	void UpdateParam_L();
 
 	void Axis_SeekOrigin_PN(
 		int iThreadID,
@@ -96,7 +99,10 @@ public:
 		Axis_Z,
 		Axis_A,
 		Axis_B,
-		Axis_C
+		Axis_C,
+		Axis_M,
+		Axis_N,
+		Axis_L
 	} MOTION_AXIS;
 	typedef enum {
 		Origin_X,
@@ -104,7 +110,10 @@ public:
 		Origin_Z,
 		Origin_A,
 		Origin_B,
-		Origin_C
+		Origin_C,
+		Origin_M,
+		Origin_N,
+		Origin_L
 	} MOTION_ORIGIN;
 	typedef enum {
 		Output_0,
@@ -123,15 +132,21 @@ public:
 		Thread_A,
 		Thread_B,
 		Thread_C,
+		Thread_M,
+		Thread_N,
+		Thread_L,
 		Thread_Buffer_Sync
 	}MOTION_THREAD;
 
-#define Axis_X_Range (30)
-#define Axis_Y_Range (30)
-#define Axis_Z_Range (68)
-#define Axis_A_Range (5)
-#define Axis_B_Range (4)
-#define Axis_C_Range (20)
+#define Axis_X_Range (30) //mm 
+#define Axis_Y_Range (30) //mm
+#define Axis_Z_Range (68) //mm
+#define Axis_A_Range (5)  //degree
+#define Axis_B_Range (4)  //degree
+#define Axis_C_Range (20) //degree
+#define Axis_M_Range (5)  //mm
+#define Axis_N_Range (4)  //mm
+#define Axis_L_Range (5) //mm
 
 #define AA_HOME_X (15)
 #define AA_HOME_Y (15)
@@ -155,6 +170,7 @@ public:
 	afx_msg void OnBnClickedCheckOutput();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnBnClickedButtonUpdate();
+	afx_msg void OnBnClickedButtonZRunning();
 	CStatic m_cCurPos_A;
 	CStatic m_cCurPos_B;
 	CStatic m_cCurPos_C;
@@ -183,6 +199,34 @@ public:
 	CButton m_cOrigin_A;
 	CButton m_cOrigin_B;
 	CButton m_cOrigin_C;
+ 
+	CButton m_cMove_M;
+	CButton m_cMove_N;
+	CButton m_cMove_L;
+	CStatic m_cCurPos_M;
+	CStatic m_cCurPos_N;
+	CStatic m_cCurPos_L;
+	CStatic m_cCurVel_M;
+	CStatic m_cCurVel_N;
+	CStatic m_cCurVel_L;
+	CStatic m_cCurAcc_M;
+	CStatic m_cCurAcc_N;
+	CStatic m_cCurAcc_L;
+	CEdit m_cMaxVel_M;
+	CEdit m_cMaxVel_N;
+	CEdit m_cMaxVel_L;
+	CEdit m_cMaxAcc_M;
+	CEdit m_cMaxAcc_N;
+	CEdit m_cMaxAcc_L;
+	CEdit m_cMaxJerk_M;
+	CEdit m_cMaxJerk_N;
+	CEdit m_cMaxJerk_L;
+	CEdit m_cPulseRatio_M;
+	CEdit m_cPulseRatio_N;
+	CEdit m_cPulseRatio_L;
+	CButton m_cOrigin_M;
+	CButton m_cOrigin_N;
+	CButton m_cOrigin_L;
 	double n;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
@@ -192,8 +236,8 @@ private:
 public:
 	bool isMotionDriverInit(); 
 	bool move_AA_X();
-	bool move_AA_Y();
 	bool move_AA_Z(double stepSize, double targerPos);
+	bool move_AA_Y(double stepSize, double targetPos);
 
 	double get_Z_Pos();
 	double get_X_Pos();
@@ -201,6 +245,11 @@ public:
 	double get_A_Pos();
 	double get_B_Pos();
 	double get_C_Pos();
-	afx_msg void OnBnClickedButtonZRunning();
+	double get_M_Pos();
+	double get_N_Pos();
+	double get_L_Pos();
+
+
+	afx_msg void OnBnClickedButtonMOrigin();
 	afx_msg void OnBnClickedHomeAll();
 };
