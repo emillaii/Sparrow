@@ -20,4 +20,4 @@ All static library / .dll are built in **x64**
 * [XT Motion Library] - Motion Libary 
 * [mfc120_x64_dll] - For XT Motion Library (in case if error still popup for the missing .dll after installing VS2013 redistributed)
 * [eigen] - Eigen is a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
-* [opencv] - Computer Vision library ( Recommend version: 3.1.0 + ) 
+* [opencv] - Computer Vision library ( Recommend version: 3.1.0 + )               
