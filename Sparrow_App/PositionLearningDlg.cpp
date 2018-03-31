@@ -119,11 +119,14 @@ BOOL CPositionLearningDlg::OnInitDialog()
 
 void CPositionLearningDlg::OnTimer(UINT_PTR nIDEvent)
 {
-	Log::GetInstance()->WriteString(_T("[OnTimer] Refreshing Screen"));
-	CString mText;
-	double zPos = MotionDlg::GetInstance()->get_Z_Pos();
-	mText.Format(_T("Z Pos: %f", zPos));
-	Log::GetInstance()->WriteString(mText);
+	if (MotionDlg::GetInstance()->isMotionDriverInit())
+	{
+		Log::GetInstance()->WriteString(_T("[OnTimer] Refreshing Screen"));
+		CString mText;
+		double zPos = MotionDlg::GetInstance()->get_Z_Pos();
+		mText.Format(_T("Z Pos: %f", zPos));
+		Log::GetInstance()->WriteString(mText);
+	}
 }
 
 void CPositionLearningDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -265,19 +268,6 @@ void CPositionLearningDlg::OnBnClickedLearnSUTX()
 
 void CPositionLearningDlg::OnBnClickedSaveConfiguration()
 {
-	double xPos;
-	double yPos;
-	double zPos;
-	double aPos;
-	double bPos;
-	double cPos;
-	xPos = MotionDlg::GetInstance()->get_X_Pos();
-	yPos = MotionDlg::GetInstance()->get_Y_Pos();
-	zPos = MotionDlg::GetInstance()->get_Z_Pos();
-	aPos = MotionDlg::GetInstance()->get_A_Pos();
-	bPos = MotionDlg::GetInstance()->get_B_Pos();
-	cPos = MotionDlg::GetInstance()->get_C_Pos();
-
 	updateSUTPosition(); 
 	updateAAPosition(); 
 

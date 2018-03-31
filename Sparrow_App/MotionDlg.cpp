@@ -757,6 +757,7 @@ BEGIN_MESSAGE_MAP(MotionDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_B_Origin, &MotionDlg::OnBnClickedButtonBOrigin)
 	ON_BN_CLICKED(IDC_BUTTON_C_Origin, &MotionDlg::OnBnClickedButtonCOrigin)
 	ON_BN_CLICKED(IDC_BUTTON_Z_Running, &MotionDlg::OnBnClickedButtonZRunning)
+	ON_BN_CLICKED(IDC_BUTTON1, &MotionDlg::OnBnClickedHomeAll)
 END_MESSAGE_MAP()
 
 
@@ -1344,7 +1345,6 @@ double MotionDlg::get_Z_Pos()
 
 double MotionDlg::get_X_Pos()
 {
-
 	int res;
 	double mPos;
 		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_X, mPos);
@@ -1422,4 +1422,44 @@ void MotionDlg::OnBnClickedButtonZRunning()
 		m_cCurPos_Z.SetWindowText(mText);
 	}
 	XT_Controler_Extend::JOG_STOP(Thread_Z, Axis_Z);
+}
+
+
+void MotionDlg::OnBnClickedHomeAll()
+{
+	// TODO: Add your control notification handler code here
+	if (!isInit) {
+		AfxMessageBox(_T("Motion driver does not init!"));
+		return;
+	}
+	double curr_pos = this->get_X_Pos(); 
+	double mStep = 1;
+	double direction = 1;
+	if (AA_HOME_X - curr_pos < 0) direction = -1;
+	XT_Controler_Extend::JOG_GO(Thread_X, Axis_X, direction*mStep, AA_HOME_X);
+
+	curr_pos = this->get_Y_Pos();
+	if (AA_HOME_Y - curr_pos < 0) direction = -1;
+	mStep = AA_HOME_Y - curr_pos;
+	XT_Controler_Extend::JOG_GO(Thread_Y, Axis_Y, direction*mStep, AA_HOME_Y);
+
+	curr_pos = this->get_Z_Pos();
+	if (AA_HOME_Z - curr_pos < 0) direction = -1;
+	mStep = AA_HOME_Z - curr_pos;
+	XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, direction*mStep, AA_HOME_Z);
+
+	curr_pos = this->get_A_Pos();
+	if (AA_HOME_A - curr_pos < 0) direction = -1;
+	mStep = AA_HOME_A - curr_pos;
+	XT_Controler_Extend::JOG_GO(Thread_A, Axis_A, direction*mStep, AA_HOME_A);
+
+	curr_pos = this->get_B_Pos();
+	if (AA_HOME_B - curr_pos < 0) direction = -1;
+	mStep = AA_HOME_B - curr_pos;
+	XT_Controler_Extend::JOG_GO(Thread_B, Axis_B, direction*mStep, AA_HOME_B);
+
+	curr_pos = this->get_C_Pos();
+	if (AA_HOME_C - curr_pos < 0) direction = -1;
+	mStep = AA_HOME_C - curr_pos;
+	XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, direction*mStep, AA_HOME_C);
 }

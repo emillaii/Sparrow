@@ -4,7 +4,7 @@
 #include "CXTMotionControler_Lib.h"
 #include "XT_MotionControler_Client_Lib.h"
 #include "XT_MotionControlerExtend_Client_Lib.h"
-#include "XT_Visual_Orientation_Lib.h"
+//#include "XT_Visual_Orientation_Lib.h"
 
 // MotionDlg dialog
 
@@ -133,6 +133,13 @@ public:
 #define Axis_B_Range (4)
 #define Axis_C_Range (20)
 
+#define AA_HOME_X (15)
+#define AA_HOME_Y (15)
+#define AA_HOME_Z (30)
+#define AA_HOME_A (0)
+#define AA_HOME_B (0)
+#define AA_HOME_C (0)
+
 	afx_msg void OnBnClickedButtonInit();
 	afx_msg void OnBnClickedButtonZxyOrigin();
 	afx_msg void OnBnClickedButtonXOrigin();
@@ -195,4 +202,5 @@ public:
 	double get_B_Pos();
 	double get_C_Pos();
 	afx_msg void OnBnClickedButtonZRunning();
+	afx_msg void OnBnClickedHomeAll();
 };
