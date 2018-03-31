@@ -542,24 +542,28 @@ void CSparrowAppDlg::OnBnClickedMotionDlg()
 void CSparrowAppDlg::OnBnClickedCommand2()
 {
 	int step_count = 8; 
-	int step_size = 10;
+	int step_size = 1;
+	int z_scan_step = 5;
 	this->positionLearningDlg->loadConfigFile();
 	double zScanStartPos = machineDefinition.getAAHeadPos().aaZScanZ;
 	if (!motionDlg->isMotionDriverInit())
 	{
 		pLog->WriteString(_T("[ZScan] Motion is not ready"));
+		AfxMessageBox(_T("Motion driver is not ready!"));
+		return; 
 	}
 	for (int i = 0; i < step_count; i++) {
-		motionDlg->move_AA_Z(step_count, zScanStartPos + i*step_size); //Move Z Motor
-		bool ret = dk->DothinkeySaveImage(0);  // Take photo first
-		if (ret)
-		{
-			CString pz;
-			m_zText.GetWindowTextW(pz);
-			double z = _wtof(pz);
-			sfr_sampling.push_back(calculateSfrAtCurrZ(true, z));
-		}
+		motionDlg->move_AA_Y(step_size, zScanStartPos + i* z_scan_step); //Move Z Motor
+		Sleep(2000); 
+		//bool ret = dk->DothinkeySaveImage(0);  // Take photo first
+		//if (ret)
+		//{
+		//	CString pz;
+		//	m_zText.GetWindowTextW(pz);
+		//	double z = _wtof(pz);
+		//	sfr_sampling.push_back(calculateSfrAtCurrZ(true, z));
+		//}
 	}
 	//plane fitting ....
-	auto e = sfr_curve_analysis(sfr_sampling, true);
+	//auto e = sfr_curve_analysis(sfr_sampling, true);
 }

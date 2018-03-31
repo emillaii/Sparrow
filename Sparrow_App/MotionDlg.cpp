@@ -5,6 +5,7 @@
 #include "MotionDlg.h"
 #include "afxdialogex.h"
 #include "Log.h"
+#include "Math.h"
 
 // MotionDlg dialog
 
@@ -1459,27 +1460,50 @@ bool MotionDlg::move_AA_Z(double stepSize, double targetPos)
 	logString.Format(_T("[move_AA_Z] stepSize: %f , targetPos: %f"), stepSize, targetPos);
 	Log::GetInstance()->WriteString(logString);
 	double currPos = 0; 
+	double direction = 1;
 	int res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, currPos);
-	//assert(1 == res);
-	XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, stepSize, targetPos);
-	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, currPos);
-	logString.Format(_T("[move_AA_Z] current pos: %f "), currPos);
-	Log::GetInstance()->WriteString(logString);
+	if (targetPos - currPos < 0) {
+		direction = -1;
+	}
+	assert(1 == res);
+	XT_Controler_Extend::JOG_GO(Thread_Z, Axis_Z, direction*stepSize, targetPos);
+	while (currPos - targetPos <= 0.01)
+	{
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Z, currPos);
+		logString.Format(_T("[move_AA_Z] current pos: %f "), currPos);
+		Log::GetInstance()->WriteString(logString);
+	}
 	return true;
 }
 
 bool MotionDlg::move_AA_Y(double stepSize, double targetPos)
 {
+	XT_Controler::SET_REG_VAL(Thread_Y, 2, 6);
+	XT_Controler::MUL_R_R(Thread_Y, 1, 2, 2);
+	XT_Controler::SET_MAX_VEL_R(Thread_Y, Axis_Y, 2);
 	CString logString;
 	logString.Format(_T("[move_AA_Y] stepSize: %f , targetPos: %f"), stepSize, targetPos);
 	Log::GetInstance()->WriteString(logString);
+	if (targetPos > Axis_Y_Range)
+	{
+		targetPos = Axis_Y_Range;
+		Log::GetInstance()->WriteString(_T("[move_AA_Y] Move targetPos reached to limit."));
+	}
 	double currPos = 0;
+	double direction = 1; 
 	int res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Y, currPos);
-	//assert(1 == res);
-	XT_Controler_Extend::JOG_GO(Thread_Y, Axis_Y, stepSize, targetPos);
-	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Y, currPos);
-	logString.Format(_T("[move_AA_Y] current pos: %f "), currPos);
-	Log::GetInstance()->WriteString(logString);
+	assert(1 == res);
+	if (targetPos - currPos < 0) {
+		direction = -1;
+	}
+	XT_Controler::SGO(Thread_Y, Axis_Y, targetPos);
+	while (fabs(currPos - targetPos) >= 0.01)
+	{
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_Y, currPos);
+		logString.Format(_T("[move_AA_Y...] current pos: %f "), currPos);
+		Log::GetInstance()->WriteString(logString);
+		Sleep(100);
+	}
 	return true;
 }
 
