@@ -19,16 +19,13 @@ MotionDlg* MotionDlg::GetInstance()
 
 
 MotionDlg::MotionDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_DIALOG_MOTION, pParent),
-	n(0)
+	: CDialog(IDD_DIALOG_MOTION, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 MotionDlg::~MotionDlg()
 {
-	Log::GetInstance()->WriteString(_T("[MotionDlg] Destuctror is called"));
-	releaseXTMotionDriver();
 }
 
 void MotionDlg::DoDataExchange(CDataExchange* pDX)
@@ -125,24 +122,7 @@ BOOL MotionDlg::OnInitDialog() {
 	CDialog::OnInitDialog();
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	if (this->isMotionDriverInit()) {
-		updateUIInterface();
-		SetTimer(0, 10, 0);
-	}
 	return TRUE;
-}
-
-void MotionDlg::releaseXTMotionDriver()
-{
-	int res = 0;
-	XT_Controler::InitDevice_PC_Local_Controler(0);
-	res = XT_Controler::beCurConnectServerAndInterfaceBoard();
-	if (1 == res)
-	{
-		//XT_Controler::CloseMotionControlerServer(); //someting wrong
-	}
-	XT_Controler_Extend::Stop_Buffer_Sync();
-	XT_Controler::ReleaseDevice();
 }
 
 BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
@@ -211,6 +191,36 @@ BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
 			UpdateParam_C();
 			XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, -m_fStep, -Axis_C_Range-10);
 		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_M)->m_hWnd)
+		{
+			UpdateParam_M();
+			XT_Controler_Extend::JOG_GO(Thread_M, Axis_M, m_fStep, Axis_M_Range);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_M)->m_hWnd)
+		{
+			UpdateParam_M();
+			XT_Controler_Extend::JOG_GO(Thread_M, Axis_M, -m_fStep, -Axis_M_Range);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_N)->m_hWnd)
+		{
+			UpdateParam_N();
+			XT_Controler_Extend::JOG_GO(Thread_N, Axis_N, m_fStep, Axis_N_Range);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_N)->m_hWnd)
+		{
+			UpdateParam_N();
+			XT_Controler_Extend::JOG_GO(Thread_N, Axis_N, -m_fStep, -Axis_N_Range);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_L)->m_hWnd)
+		{
+			UpdateParam_L();
+			XT_Controler_Extend::JOG_GO(Thread_L, Axis_L, m_fStep, Axis_L_Range);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_L)->m_hWnd)
+		{
+			UpdateParam_L();
+			XT_Controler_Extend::JOG_GO(Thread_L, Axis_L, -m_fStep, -Axis_L_Range);
+		}
 	}
 	else if (WM_LBUTTONUP == pMsg->message)
 	{
@@ -261,6 +271,30 @@ BOOL MotionDlg::PreTranslateMessage(MSG * pMsg)
 		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_C)->m_hWnd)
 		{
 			XT_Controler_Extend::JOG_STOP(Thread_C, Axis_C);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_L)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_M, Axis_M);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_M)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_M, Axis_M);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_N)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_N, Axis_N);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_N)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_N, Axis_N);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Incre_L)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_L, Axis_L);
+		}
+		else if (pMsg->hwnd == GetDlgItem(IDC_BUTTON_Decre_L)->m_hWnd)
+		{
+			XT_Controler_Extend::JOG_STOP(Thread_L, Axis_L);
 		}
 	}
 
@@ -625,7 +659,7 @@ void MotionDlg::Axis_SeekOrigin_PN(int iThreadID, unsigned int iAxis, unsigned i
 	XT_Controler::MUL_R_R(iThreadID, iVelReg, iMulReg, iMulReg);
 	XT_Controler::SET_MAX_VEL_R(iThread, iAxis, iMulReg);
 
-	XT_Controler::SGO(iThread, iAxis, fPos);
+	XT_Controler:: SGO(iThread, iAxis, fPos);
 
 	if (1 == bIo_In_Origin_Dir)
 	{
@@ -903,8 +937,24 @@ BEGIN_MESSAGE_MAP(MotionDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON1, &MotionDlg::OnBnClickedHomeAll)
 END_MESSAGE_MAP()
 
-void MotionDlg::updateUIInterface()
+
+// MotionDlg message handlers
+
+
+void MotionDlg::OnBnClickedButtonInit()
 {
+	// TODO: Add your control notification handler code here
+	if (isInit) return; 
+	int res = 0;
+
+	KillTimer(0);
+	/*m_cMaxVel_X.SetWindowText(_T("4"));
+	m_cMaxVel_Y.SetWindowText(_T("20"));
+	m_cMaxVel_Z.SetWindowText(_T("20"));
+	m_cMaxVel_A.SetWindowText(_T("23"));
+	m_cMaxVel_B.SetWindowText(_T("17"));
+	m_cMaxVel_C.SetWindowText(_T("80"));*/
+
 	m_cMaxVel_X.SetWindowText(_T("4"));
 	m_cMaxVel_Y.SetWindowText(_T("4"));
 	m_cMaxVel_Z.SetWindowText(_T("4"));
@@ -946,22 +996,7 @@ void MotionDlg::updateUIInterface()
 	m_cPulseRatio_L.SetWindowText(_T("0"));
 
 	m_cStep.SetWindowText(_T("0.1"));
-}
 
-// MotionDlg message handlers
-
-void MotionDlg::OnBnClickedButtonInit()
-{
-	// TODO: Add your control notification handler code here
-	int res = 0;
-	KillTimer(0);
-	updateUIInterface();
-	//Motion Driver has already initialized
-	if (isInit)
-	{
-		SetTimer(0, 10, 0);
-		return;
-	}
 	LPWSTR pTarget = L"127.0.0.1";
 
 #if 1
@@ -980,6 +1015,7 @@ void MotionDlg::OnBnClickedButtonInit()
 			return;
 		}
 	}
+
 
 	XT_Controler::ReBuildSystem();
 
@@ -1000,9 +1036,9 @@ void MotionDlg::OnBnClickedButtonInit()
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 4, Axis_A);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 5, Axis_B);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 3, Axis_C);
-//	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 0, Axis_M);
-//	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 1, Axis_N);
-//	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 2, Axis_L);
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 0, Axis_M);
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 1, Axis_N);
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 2, Axis_L);
 
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 12, 0, Origin_X);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 11, 0, Origin_Y);
@@ -1010,9 +1046,9 @@ void MotionDlg::OnBnClickedButtonInit()
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 6, 0, Origin_A);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 2, 0, Origin_B);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 8, 0, Origin_C);
-//	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 0, 0, Origin_M);
-//	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 1, 0, Origin_N);
-//	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 2, 0, Origin_L);
+	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 0, 0, Origin_M);
+	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 1, 0, Origin_N);
+	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 2, 0, Origin_L);
 
 
 #if 1
@@ -1068,6 +1104,8 @@ void MotionDlg::OnBnClickedButtonInit()
 	//AfxMessageBox(_T("Initialization Finished"), MB_SYSTEMMODAL);
 	//m_cInit_Button.SetWindowText(_T("Reset Controller"));
 	isInit = true;
+
+
 	SetTimer(0, 10, 0);
 }
 
@@ -1208,8 +1246,24 @@ void MotionDlg::OnBnClickedCheckOutput()
 	assert(1 == res);
 }
 
+
 void MotionDlg::OnBnClickedCancel()
 {
+	//// TODO: Add your control notification handler code here
+	int res = 0;
+
+	XT_Controler::InitDevice_PC_Local_Controler(0);
+
+	res = XT_Controler::beCurConnectServerAndInterfaceBoard();
+	if (1 == res)
+	{
+		//XT_Controler::CloseMotionControlerServer(); //someting wrong
+	}
+
+	XT_Controler_Extend::Stop_Buffer_Sync();
+
+	XT_Controler::ReleaseDevice();
+
 	OnCancel();
 }
 
@@ -1448,12 +1502,6 @@ bool MotionDlg::isMotionDriverInit()
 	return isInit;
 }
 
-
-bool MotionDlg::move_AA_X()
-{
-	return true; 
-}
-
 bool MotionDlg::move_AA_Z(double stepSize, double targetPos)
 {
 	CString logString;
@@ -1507,6 +1555,46 @@ bool MotionDlg::move_AA_Y(double stepSize, double targetPos)
 	return true;
 }
 
+bool MotionDlg::move(int iThreadID, int iAxisID, double speed, double targetPos, unsigned int axisRange)
+{
+	CString logString;
+	logString.Format(axis[iAxisID]+_T(" speed: %f , targetPos: %f"), speed, targetPos);
+	Log::GetInstance()->WriteString(logString);
+	if (targetPos > axisRange)
+	{
+		targetPos = axisRange;
+		Log::GetInstance()->WriteString(axis[iAxisID]+_T(" Move targetPos reached to limit."));
+	}
+
+	if (speed > 4)
+	{
+		speed = 0;
+		Log::GetInstance()->WriteString(axis[iAxisID] + _T(" Moving speed(6) is too large."));
+	}
+
+	XT_Controler::SET_MAX_VEL(iThreadID, iAxisID, 4);
+	XT_Controler::SET_MAX_ACC(iThreadID, iAxisID, 40);
+	XT_Controler::SET_MAX_JERK(iThreadID, iAxisID, 400);
+
+	//XT_Controler::SET_REG_VAL(iThreadID, 2, speed);
+	//XT_Controler::MUL_R_R(iThreadID, 1, 2, 2);
+	//XT_Controler::SET_MAX_VEL_R(iThreadID, iAxisID, 2);
+
+	XT_Controler::SGO(iThreadID, iAxisID, targetPos);
+	double currPos = 0;
+	int res = XT_Controler_Extend::Get_Cur_Axis_Pos(iAxisID, currPos);
+	assert(1 == res);
+	while (fabs(currPos - targetPos) >= 0.01)
+	{
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(iAxisID, currPos);
+		assert(1 == res);
+		logString.Format(axis[iAxisID]+_T(" current pos: %f "), currPos);
+		Log::GetInstance()->WriteString(logString);
+		Sleep(100);
+	}
+	return true;
+}
+
 double MotionDlg::get_Z_Pos()
 {
 	int res;
@@ -1536,6 +1624,7 @@ double MotionDlg::get_Y_Pos()
 
 double MotionDlg::get_A_Pos()
 {
+
 	int res;
 	double mPos;
 	res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_A, mPos);
@@ -1603,7 +1692,6 @@ void MotionDlg::OnBnClickedButtonMOrigin()
 	// TODO: Add your control notification handler code here
 	UpdateParam_M();
 	Axis_SeekOrigin_PN(Thread_M, Axis_M, Origin_M, 1, Axis_M_Range, -Axis_M_Range, 0, 0, 0.1);
-
 }
 
 

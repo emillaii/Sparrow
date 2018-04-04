@@ -5,7 +5,75 @@
 #include "XT_MotionControler_Client_Lib.h"
 #include "XT_MotionControlerExtend_Client_Lib.h"
 #include "XT_Visual_Orientation_Lib.h"
+#include <stdio.h>
 
+typedef enum {
+	Axis_X,
+	Axis_Y,
+	Axis_Z,
+	Axis_A,
+	Axis_B,
+	Axis_C,
+	Axis_L,
+	Axis_M,
+	Axis_N
+} MOTION_AXIS;
+typedef enum {
+	Origin_X,
+	Origin_Y,
+	Origin_Z,
+	Origin_A,
+	Origin_B,
+	Origin_C,
+	Origin_L,
+	Origin_M,
+	Origin_N
+} MOTION_ORIGIN;
+typedef enum {
+	Output_0,
+	EN_X,
+	EN_Y,
+	EN_Z,
+	En_A,
+	En_B,
+	En_C
+}MOTION_EN;
+typedef enum {
+	Thread_Interpolation,
+	Thread_X,
+	Thread_Y,
+	Thread_Z,
+	Thread_A,
+	Thread_B,
+	Thread_C,
+	Thread_L,
+	Thread_N,
+	Thread_M,
+	Thread_Buffer_Sync
+}MOTION_THREAD;
+
+//typedef enum {
+//	Axis_X_Range,
+//	Axis_Y_Range,
+//	Axis_Z_Range,
+//	Axis_A_Range,
+//	Axis_B_Range,
+//	Axis_C_Range,
+//	Axis_L_Range,
+//	Axis_M_Range,
+//	Axis_N_Range
+//};
+
+static const CString axis[9] = {_T( "Axis_X"),_T("Axis_Y"),_T("Axis_Z"),_T("Axis_A"),_T("Axis_B"),_T("Axis_C"),_T("Axis_L"),_T("Axis_M"),_T("Axis_N") };
+#define Axis_X_Range (30) //mm 
+#define Axis_Y_Range (30) //mm
+#define Axis_Z_Range (68) //mm
+#define Axis_A_Range (5)  //degree
+#define Axis_B_Range (4)  //degree
+#define Axis_C_Range (20) //degree
+#define Axis_M_Range (5)  //mm
+#define Axis_N_Range (4)  //mm
+#define Axis_L_Range (5) //mm
 // MotionDlg dialog
 
 class MotionDlg : public CDialog
@@ -15,7 +83,7 @@ class MotionDlg : public CDialog
 public:
 	MotionDlg(CWnd* pParent = NULL);   // standard constructor
 	virtual ~MotionDlg();
-
+		
 	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DIALOG_MOTION };
@@ -93,60 +161,6 @@ public:
 	CEdit m_cStep;
 	double m_fStep;
 
-	typedef enum {
-		Axis_X,
-		Axis_Y,
-		Axis_Z,
-		Axis_A,
-		Axis_B,
-		Axis_C,
-		Axis_M,
-		Axis_N,
-		Axis_L
-	} MOTION_AXIS;
-	typedef enum {
-		Origin_X,
-		Origin_Y,
-		Origin_Z,
-		Origin_A,
-		Origin_B,
-		Origin_C,
-		Origin_M,
-		Origin_N,
-		Origin_L
-	} MOTION_ORIGIN;
-	typedef enum {
-		Output_0,
-		EN_X,
-		EN_Y,
-		EN_Z,
-		En_A,
-		En_B,
-		En_C
-	}MOTION_EN;
-	typedef enum {
-		Thread_Interpolation,
-		Thread_X,
-		Thread_Y,
-		Thread_Z,
-		Thread_A,
-		Thread_B,
-		Thread_C,
-		Thread_M,
-		Thread_N,
-		Thread_L,
-		Thread_Buffer_Sync
-	}MOTION_THREAD;
-
-#define Axis_X_Range (30) //mm 
-#define Axis_Y_Range (30) //mm
-#define Axis_Z_Range (68) //mm
-#define Axis_A_Range (5)  //degree
-#define Axis_B_Range (4)  //degree
-#define Axis_C_Range (20) //degree
-#define Axis_M_Range (5)  //mm
-#define Axis_N_Range (4)  //mm
-#define Axis_L_Range (5) //mm
 
 #define AA_HOME_X (15)
 #define AA_HOME_Y (15)
@@ -227,7 +241,6 @@ public:
 	CButton m_cOrigin_M;
 	CButton m_cOrigin_N;
 	CButton m_cOrigin_L;
-	double n;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 
 //Motion Service 
@@ -237,9 +250,9 @@ private:
 	void releaseXTMotionDriver();
 public:
 	bool isMotionDriverInit(); 
-	bool move_AA_X();
 	bool move_AA_Z(double stepSize, double targerPos);
 	bool move_AA_Y(double stepSize, double targetPos);
+	bool move(int iThreadID, int iAxisID, double speed, double targetPos, unsigned int axisRange);
 
 	double get_Z_Pos();
 	double get_X_Pos();

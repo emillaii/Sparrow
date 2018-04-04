@@ -50,10 +50,9 @@ END_MESSAGE_MAP()
 
 // CSparrowAppDlg dialog
 
-
-
 CSparrowAppDlg::CSparrowAppDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(IDD_Sparrow_APP_DIALOG, pParent)
+	: CDialog(IDD_Sparrow_APP_DIALOG, pParent),
+	directionY(true)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -552,18 +551,26 @@ void CSparrowAppDlg::OnBnClickedCommand2()
 		AfxMessageBox(_T("Motion driver is not ready!"));
 		return; 
 	}
-	for (int i = 0; i < step_count; i++) {
+	for (int i = 0; i < step_count; i++) 
+	{
 		motionDlg->move_AA_Y(step_size, zScanStartPos + i* z_scan_step); //Move Z Motor
 		Sleep(2000); 
-		//bool ret = dk->DothinkeySaveImage(0);  // Take photo first
-		//if (ret)
-		//{
-		//	CString pz;
-		//	m_zText.GetWindowTextW(pz);
-		//	double z = _wtof(pz);
-		//	sfr_sampling.push_back(calculateSfrAtCurrZ(true, z));
-		//}
+		bool ret = dk->DothinkeySaveImage(0);  // Take photo first
+		if (ret)
+		{
+			CString pz;
+			m_zText.GetWindowTextW(pz);
+			double z = _wtof(pz);
+			sfr_sampling.push_back(calculateSfrAtCurrZ(true, z));
+		}
+		else
+		{
+			motionDlg->move_AA_Y(-step_size, 0);
+			directionY = true;
+
+		}
 	}
+
 	//plane fitting ....
 	//auto e = sfr_curve_analysis(sfr_sampling, true);
 }
