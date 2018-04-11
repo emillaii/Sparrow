@@ -36,7 +36,10 @@ typedef enum {
 	EN_Z,
 	En_A,
 	En_B,
-	En_C
+	En_C,
+	EN_L,
+	EN_M,
+	EN_N
 }MOTION_EN;
 typedef enum {
 	Thread_Interpolation,
@@ -71,9 +74,9 @@ static const CString axis[9] = {_T( "Axis_X"),_T("Axis_Y"),_T("Axis_Z"),_T("Axis
 #define Axis_A_Range (5)  //degree
 #define Axis_B_Range (4)  //degree
 #define Axis_C_Range (20) //degree
-#define Axis_M_Range (5)  //mm
-#define Axis_N_Range (4)  //mm
-#define Axis_L_Range (5) //mm
+#define Axis_M_Range (10)  //mm
+#define Axis_N_Range (10)  //mm
+#define Axis_L_Range (10)  //mm
 // MotionDlg dialog
 
 class MotionDlg : public CDialog
@@ -267,4 +270,6 @@ public:
 
 	afx_msg void OnBnClickedButtonMOrigin();
 	afx_msg void OnBnClickedHomeAll();
+	afx_msg void OnBnClickedButtonLOrigin();
+	afx_msg void OnBnClickedButtonNOrigin();
 };

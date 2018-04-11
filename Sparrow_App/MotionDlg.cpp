@@ -935,6 +935,8 @@ BEGIN_MESSAGE_MAP(MotionDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_Z_Running, &MotionDlg::OnBnClickedButtonZRunning)
 	ON_BN_CLICKED(IDC_BUTTON_M_Origin, &MotionDlg::OnBnClickedButtonMOrigin)
 	ON_BN_CLICKED(IDC_BUTTON1, &MotionDlg::OnBnClickedHomeAll)
+	ON_BN_CLICKED(IDC_BUTTON_L_Origin, &MotionDlg::OnBnClickedButtonLOrigin)
+	ON_BN_CLICKED(IDC_BUTTON_N_Origin, &MotionDlg::OnBnClickedButtonNOrigin)
 END_MESSAGE_MAP()
 
 
@@ -991,9 +993,9 @@ void MotionDlg::OnBnClickedButtonInit()
 	m_cPulseRatio_A.SetWindowText(_T("1333.333333333333333333"));
 	m_cPulseRatio_B.SetWindowText(_T("1818.181818181818181818"));
 	m_cPulseRatio_C.SetWindowText(_T("-500"));
-	m_cPulseRatio_M.SetWindowText(_T("0"));
-	m_cPulseRatio_N.SetWindowText(_T("0"));
-	m_cPulseRatio_L.SetWindowText(_T("0"));
+	m_cPulseRatio_M.SetWindowText(_T("10000"));
+	m_cPulseRatio_N.SetWindowText(_T("10000"));
+	m_cPulseRatio_L.SetWindowText(_T("200"));
 
 	m_cStep.SetWindowText(_T("0.1"));
 
@@ -1033,12 +1035,17 @@ void MotionDlg::OnBnClickedButtonInit()
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 1, Axis_X);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 2, Axis_Y);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 0, Axis_Z); 
+
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 0, Axis_X);
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 1, Axis_Y);
+	//XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 2, Axis_Z);
+
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 4, Axis_A);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 5, Axis_B);
 	XT_Controler::SET_AXIS_MAP(iThread_Init, 1, 3, Axis_C);
-	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 0, Axis_M);
-	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 1, Axis_N);
-	//XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 2, Axis_L);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 0, Axis_L);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 1, Axis_M);
+	XT_Controler::SET_AXIS_MAP(iThread_Init, 2, 2, Axis_N);
 
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 12, 0, Origin_X);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 11, 0, Origin_Y);
@@ -1046,9 +1053,9 @@ void MotionDlg::OnBnClickedButtonInit()
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 6, 0, Origin_A);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 2, 0, Origin_B);
 	XT_Controler::SET_IOIN_MAP(iThread_Init, 1, 6, 8, 0, Origin_C);
-	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 0, 0, Origin_M);
-	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 1, 0, Origin_N);
-	//XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 2, 0, Origin_L);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 0, 0, Origin_L);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 1, 0, Origin_M);
+	XT_Controler::SET_IOIN_MAP(iThread_Init, 2, 4, 2, 0, Origin_N);
 
 
 #if 1
@@ -1060,6 +1067,14 @@ void MotionDlg::OnBnClickedButtonInit()
 
 
 #if 1
+
+	XT_Controler::SET_IOOUT_MAP(iThread_Init, 2, 4, 8, EN_L);
+	XT_Controler::SET_IOOUT_MAP(iThread_Init, 2, 4, 9, EN_M);
+	XT_Controler::SET_IOOUT_MAP(iThread_Init, 2, 4, 10, EN_N);
+
+	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_L, 1);
+	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_M, 1);
+	XT_Controler::SET_OUTPUT_IO(iThread_Init, EN_N, 1);
 /*
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 15, EN_X);
 	XT_Controler::SET_IOOUT_MAP(iThread_Init, 1, 4, 16, EN_Y);
@@ -1100,6 +1115,9 @@ void MotionDlg::OnBnClickedButtonInit()
 	UpdateParam_A();
 	UpdateParam_B();
 	UpdateParam_C();
+	UpdateParam_L();
+	UpdateParam_M();
+	UpdateParam_N();
 
 	//AfxMessageBox(_T("Initialization Finished"), MB_SYSTEMMODAL);
 	//m_cInit_Button.SetWindowText(_T("Reset Controller"));
@@ -1118,7 +1136,7 @@ void MotionDlg::OnBnClickedButtonZxyOrigin()
 	UpdateParam_Y();
 	UpdateParam_Z();
 
-	Axis_SeekOrigin_PN(Thread_Z, Axis_Z, Origin_Z, 0, Axis_Z_Range + 10, -Axis_Z_Range - 10, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_Z, Axis_Z, Origin_Z, 0, Axis_Z_Range, -Axis_Z_Range, 0, 0, 0.1);
 
 #if 0
 
@@ -1143,6 +1161,16 @@ void MotionDlg::OnBnClickedButtonXOrigin()
 	UpdateParam_X();
 
 	Axis_SeekOrigin_PN(Thread_X, Axis_X, Origin_X, 0, Axis_X_Range, -Axis_X_Range, 0, 0, 0.1);
+	
+	XT_Controler::SET_MAX_VEL(Thread_X, Axis_X, 4);
+	XT_Controler::SET_MAX_ACC(Thread_X, Axis_X, 40);
+	XT_Controler::SET_MAX_JERK(Thread_X, Axis_X, 400);
+
+	XT_Controler::SGO(Thread_X, Axis_X, 4.15);
+
+	XT_Controler::TILLSTOP(Thread_X, Axis_X);
+
+	XT_Controler::SET_AXIS_ZEROS(Thread_X, Axis_X, 0);
 }
 
 
@@ -1152,6 +1180,20 @@ void MotionDlg::OnBnClickedButtonYOrigin()
 	UpdateParam_Y();
 
 	Axis_SeekOrigin_PN(Thread_Y, Axis_Y, Origin_Y, 0, Axis_Y_Range, -Axis_Y_Range, 0, 0, 0.1);
+	
+	XT_Controler::SET_MAX_VEL(Thread_Y, Axis_Y, 4);
+	XT_Controler::SET_MAX_ACC(Thread_Y, Axis_Y, 40);
+	XT_Controler::SET_MAX_JERK(Thread_Y, Axis_Y, 400);
+
+	//XT_Controler::SET_REG_VAL(Thread_Y, 2, 4);
+	//XT_Controler::MUL_R_R(Thread_Y, 1, 2, 2);
+	//XT_Controler::SET_MAX_VEL_R(Thread_Y, Axis_Y, 2);
+
+	XT_Controler::SGO(Thread_Y, Axis_Y, 15.65);
+
+	XT_Controler::TILLSTOP(Thread_Y, Axis_Y);
+
+	XT_Controler::SET_AXIS_ZEROS(Thread_Y, Axis_Y, 0);
 
 }
 
@@ -1162,6 +1204,17 @@ void MotionDlg::OnBnClickedButtonZOrigin()
 	UpdateParam_Z();
 
 	Axis_SeekOrigin_PN(Thread_Z, Axis_Z, Origin_Z, 1, Axis_Z_Range, -Axis_Z_Range, 0, 0, 0.1);
+
+	XT_Controler::SET_MAX_VEL(Thread_Z, Axis_Z, 4);
+	XT_Controler::SET_MAX_ACC(Thread_Z, Axis_Z, 40);
+	XT_Controler::SET_MAX_JERK(Thread_Z, Axis_Z, 400);
+
+	XT_Controler::SGO(Thread_Z, Axis_Z, 35.91);
+
+	XT_Controler::TILLSTOP(Thread_Z, Axis_Z);
+
+	XT_Controler::SET_AXIS_ZEROS(Thread_Z, Axis_Z, 0);
+
 }
 
 void MotionDlg::OnBnClickedButtonAOrigin()
@@ -1318,12 +1371,38 @@ void MotionDlg::OnBnClickedButtonUpdate()
 		return;
 	}
 
+	m_cPulseRatio_L.GetWindowText(Text);
+	double fPulseRaito_L = _wtof(Text.GetBuffer());
+	if (0 == fPulseRaito_L)
+	{
+		AfxMessageBox(_T("pulse ratio should not be 0"));
+		return;
+	}
+	m_cPulseRatio_M.GetWindowText(Text);
+	double fPulseRaito_M = _wtof(Text.GetBuffer());
+	if (0 == fPulseRaito_M)
+	{
+		AfxMessageBox(_T("pulse ratio should not be 0"));
+		return;
+	}
+	m_cPulseRatio_N.GetWindowText(Text);
+	double fPulseRaito_N = _wtof(Text.GetBuffer());
+	if (0 == fPulseRaito_N)
+	{
+		AfxMessageBox(_T("pulse ratio should not be 0"));
+		return;
+	}
+
 	XT_Controler::SET_AXIS_SCALE(Thread_X, Axis_X, fPulseRaito_X * 65536);
 	XT_Controler::SET_AXIS_SCALE(Thread_Y, Axis_Y, fPulseRaito_Y * 65536);
 	XT_Controler::SET_AXIS_SCALE(Thread_Z, Axis_Z, fPulseRaito_Z * 65536);
 	XT_Controler::SET_AXIS_SCALE(Thread_A, Axis_A, fPulseRaito_A * 65536);
 	XT_Controler::SET_AXIS_SCALE(Thread_B, Axis_B, fPulseRaito_B * 65536);
 	XT_Controler::SET_AXIS_SCALE(Thread_C, Axis_C, fPulseRaito_C * 65536);
+
+	XT_Controler::SET_AXIS_SCALE(Thread_L, Axis_L, fPulseRaito_L * 65536);
+	XT_Controler::SET_AXIS_SCALE(Thread_M, Axis_M, fPulseRaito_M * 65536);
+	XT_Controler::SET_AXIS_SCALE(Thread_N, Axis_N, fPulseRaito_N * 65536);
 }
 
 void MotionDlg::OnTimer(UINT_PTR nIDEvent)
@@ -1363,6 +1442,21 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		assert(1 == res);
 		Text.Format(_T("%.3f"), fVal);
 		m_cCurPos_C.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_L, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurPos_L.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_M, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurPos_M.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Pos(Axis_N, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurPos_N.SetWindowText(Text);
 	}
 
 	{
@@ -1395,6 +1489,21 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		assert(1 == res);
 		Text.Format(_T("%.3f"), fVal);
 		m_cCurVel_C.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Vel(Axis_L, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurVel_L.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Vel(Axis_M, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurVel_M.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Vel(Axis_N, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurVel_N.SetWindowText(Text);
 	}
 
 	{
@@ -1427,6 +1536,21 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		assert(1 == res);
 		Text.Format(_T("%.3f"), fVal);
 		m_cCurAcc_C.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Acc(Axis_L, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurAcc_L.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Acc(Axis_N, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurAcc_N.SetWindowText(Text);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_Acc(Axis_M, fVal);
+		assert(1 == res);
+		Text.Format(_T("%.3f"), fVal);
+		m_cCurAcc_M.SetWindowText(Text);
 	}
 
 	{
@@ -1455,6 +1579,18 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		res = XT_Controler_Extend::Get_Cur_Axis_State(Axis_C, bRun);
 		assert(1 == res);
 		m_cMove_C.SetCheck(bRun);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_State(Axis_L, bRun);
+		assert(1 == res);
+		m_cMove_L.SetCheck(bRun);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_State(Axis_M, bRun);
+		assert(1 == res);
+		m_cMove_M.SetCheck(bRun);
+
+		res = XT_Controler_Extend::Get_Cur_Axis_State(Axis_N, bRun);
+		assert(1 == res);
+		m_cMove_N.SetCheck(bRun);
 	}
 
 	{
@@ -1484,6 +1620,19 @@ void MotionDlg::OnTimer(UINT_PTR nIDEvent)
 		res = XT_Controler_Extend::Get_IoIn_State(Origin_C, bState);
 		assert(1 == res);
 		m_cOrigin_C.SetCheck(bState);
+
+		res = XT_Controler_Extend::Get_IoIn_State(Origin_L, bState);
+		assert(1 == res);
+		m_cOrigin_L.SetCheck(bState);
+
+		res = XT_Controler_Extend::Get_IoIn_State(Origin_M, bState);
+		assert(1 == res);
+		m_cOrigin_M.SetCheck(bState);
+
+		res = XT_Controler_Extend::Get_IoIn_State(Origin_N, bState);
+		assert(1 == res);
+		m_cOrigin_N.SetCheck(bState);
+
 	}
 
 	{
@@ -1576,7 +1725,7 @@ bool MotionDlg::move(int iThreadID, int iAxisID, double speed, double targetPos,
 	XT_Controler::SET_MAX_ACC(iThreadID, iAxisID, 40);
 	XT_Controler::SET_MAX_JERK(iThreadID, iAxisID, 400);
 
-	//XT_Controler::SET_REG_VAL(iThreadID, 2, speed);
+	XT_Controler::SET_REG_VAL(iThreadID, 2, speed);
 	//XT_Controler::MUL_R_R(iThreadID, 1, 2, 2);
 	//XT_Controler::SET_MAX_VEL_R(iThreadID, iAxisID, 2);
 
@@ -1691,7 +1840,7 @@ void MotionDlg::OnBnClickedButtonMOrigin()
 {
 	// TODO: Add your control notification handler code here
 	UpdateParam_M();
-	Axis_SeekOrigin_PN(Thread_M, Axis_M, Origin_M, 1, Axis_M_Range, -Axis_M_Range, 0, 0, 0.1);
+	Axis_SeekOrigin_PN(Thread_M, Axis_M, Origin_M, 0, Axis_M_Range, -Axis_M_Range, 0, 0, 0.1);
 }
 
 
@@ -1732,4 +1881,24 @@ void MotionDlg::OnBnClickedHomeAll()
 	if (AA_HOME_C - curr_pos < 0) direction = -1;
 	mStep = AA_HOME_C - curr_pos;
 	XT_Controler_Extend::JOG_GO(Thread_C, Axis_C, direction*mStep, AA_HOME_C);
+}
+
+
+void MotionDlg::OnBnClickedButtonLOrigin()
+{
+	// TODO: Add your control notification handler code here
+	UpdateParam_L();
+
+	Axis_SeekOrigin_PN(Thread_L, Axis_L, Origin_L, 0, Axis_L_Range, -Axis_L_Range, 0, 0, 0.1);
+
+}
+
+
+void MotionDlg::OnBnClickedButtonNOrigin()
+{
+	// TODO: Add your control notification handler code here
+	UpdateParam_N();
+
+	Axis_SeekOrigin_PN(Thread_N, Axis_N, Origin_N, 0, Axis_N_Range, -Axis_N_Range, 0, 0, 0.1);
+
 }
